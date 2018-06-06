@@ -10,6 +10,7 @@ import Header from './components/Header/Header';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
 import UserPage from './components/UserPage/UserPage';
+import RoomsPage from './components/RoomsPage/RoomsPage';
 
 import './styles/main.css';
 
@@ -31,6 +32,9 @@ const App = () => (
           path="/user"
           component={UserPage}
         />
+        <Route
+          path="/rooms"
+          component={RoomsPage}
         />
         {/* OTHERWISE (no path!) */}
         <Route render={() => <h1>404</h1>} />

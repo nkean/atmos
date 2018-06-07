@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Button, Card, Icon } from 'antd';
 
 import LightCard from '../LightCard/LightCard';
 import Nav from '../../components/Nav/Nav';
@@ -11,20 +10,20 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 
-const hueToken = '78bc7d002bc743a6603993b6f96137f';
-const bridgeIP = '192.168.1.101';
-
 class RoomsPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      apiToken: '',
+      bridgeIP: '',
       lights: [],
     };
   }
 
   componentDidMount() {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
+    this.getSettings();
   }
 
   componentDidUpdate() {
@@ -34,19 +33,28 @@ class RoomsPage extends Component {
   }
 
   getLights() {
-    const url = `http://${bridgeIP}/api/${hueToken}/lights`;
-    axios.get(url)
+    axios.get('/api/settings/light')
       .then(response => {
-        let lightList = [];
-        for (const key of Object.keys(response.data)) {
-          lightList.push(key);
-        }
         this.setState({
-          lights: lightList,
+          lights: response.data,
         });
       })
       .catch(error => {
-        console.log('Error with GET to Hue bridge: ', error);
+        console.log('Error with GET: ', error);
+      })
+  }
+
+  getSettings = () => {
+    axios.get('/api/settings/fetch')
+      .then(response => {
+        this.setState({
+          apiToken: response.data.token,
+          bridgeIP: response.data.bridge,
+        });
+        this.getLights();
+      })
+      .catch(error => {
+        console.log('Error fetching user settings: ', error);
       })
   }
 
@@ -55,22 +63,14 @@ class RoomsPage extends Component {
 
     if (this.props.user.userName) {
       content = (
-        <div>
-          <Button
-            type="primary"
-            onClick={() => this.getLights()}
-          >
-            Get Lights
-          </Button>
           <div>
             {this.state.lights.map(light => <LightCard
-                                              key={light}
+                                              key={light.id}
                                               light={light}
-                                              hueToken={hueToken} 
-                                              bridgeIP={bridgeIP}
+                                              apiToken={this.state.apiToken} 
+                                              bridgeIP={this.state.bridgeIP}
                                               />)}
           </div>
-        </div>
       );
     }
 

@@ -114,7 +114,7 @@ class LoginPage extends Component {
               <Input
                 prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 placeholder="Username"
-                value={this.state.username}
+                setFieldsValue={this.state.username}
                 onChange={this.handleInputChangeFor('username')}
               />
             )}
@@ -127,7 +127,7 @@ class LoginPage extends Component {
                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 type="password"
                 placeholder="Password"
-                value={this.state.password}
+                setFieldsValue={this.state.password}
                 onChange={this.handleInputChangeFor('password')}
               />
             )}

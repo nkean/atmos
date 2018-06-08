@@ -47,7 +47,7 @@ class LoginPage extends Component {
     this.props.history.push('/register');
   }
 
-  handleInputChangeFor = propertyName => (event) => {
+  handleInputChangeFor = propertyName => event => {
     this.setState({
       [propertyName]: event.target.value,
     });
@@ -68,7 +68,6 @@ class LoginPage extends Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     return (
       <div>
         {this.renderAlert()}
@@ -108,29 +107,19 @@ class LoginPage extends Component {
         </form> */}
         <Form onSubmit={this.login}>
           <FormItem>
-            {getFieldDecorator('userName', {
-              rules: [{ required: true, message: 'Please enter your username' }],
-            })(
               <Input
                 prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 placeholder="Username"
-                setFieldsValue={this.state.username}
                 onChange={this.handleInputChangeFor('username')}
               />
-            )}
           </FormItem>
           <FormItem>
-            {getFieldDecorator('password', {
-              rules: [{ required: true, message: 'Please enter your password' }],
-            })(
               <Input
                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 type="password"
                 placeholder="Password"
-                setFieldsValue={this.state.password}
                 onChange={this.handleInputChangeFor('password')}
               />
-            )}
           </FormItem>
           <Button
             type="primary"
@@ -145,6 +134,4 @@ class LoginPage extends Component {
   }
 }
 
-const WrappedLoginPage = Form.create()(LoginPage);
-
-export default connect(mapStateToProps)(WrappedLoginPage);
+export default connect(mapStateToProps)(LoginPage);

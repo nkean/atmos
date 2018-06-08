@@ -17,7 +17,7 @@ import './styles/main.css';
 
 const App = () => (
   <div>
-    <Header title="Atmos" />
+    <Header title="Atmos: Home Lighting Recipes" />
     <Router>
       <Switch>
         <Redirect exact from="/" to="/home" />

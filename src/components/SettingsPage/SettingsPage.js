@@ -128,6 +128,7 @@ class SettingsPage extends Component {
             placeholder="Bridge IP (ex: 192.168.1.100)"
             onChange={this.handleInputChangeFor('bridgeIP')}
             value={this.state.bridgeIP}
+            style={{width: 200}}
           />
           <Search 
             placeholder="Hue API Token"
@@ -135,6 +136,7 @@ class SettingsPage extends Component {
             onChange={this.handleInputChangeFor('apiToken')}
             value={this.state.apiToken}
             onSearch={() => this.fetchToken(this.props.user.userName)}
+            style={{width: 500}}
           />
           <Button
             type="primary"

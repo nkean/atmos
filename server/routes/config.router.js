@@ -4,9 +4,8 @@ const router = express.Router();
 
 router.get('/fetch', (req, res) => {
   if(req.isAuthenticated()) {
-    let queryText = `SELECT "bridge", "token" FROM "users"
-                     WHERE "username" = $1`;
-    pool.query(queryText, [req.user.username])
+    let queryText = `SELECT * FROM "config"`;
+    pool.query(queryText)
       .then(response => {
         res.send(response.rows[0]);
       })
@@ -14,24 +13,45 @@ router.get('/fetch', (req, res) => {
         console.log('Error on GET: ', error);
         res.sendStatus(500);
       })
+  } else {
+    res.sendStatus(403);
   }
 });
 
-router.post('/save', (req, res) => {
+router.post('/bridge', (req, res) => {
   if(req.isAuthenticated()) {
-    let queryText = `UPDATE "users" SET "token" = $1, "bridge" = $2
-                     WHERE "username" = $3`;
-    pool.query(queryText, [req.body.apiToken, req.body.bridgeIP, req.user.username])
+    let queryText = `INSERT INTO "config" ("id", "bridge_address")
+                     VALUES (1, $1)
+                     ON CONFLICT ("id")
+                     DO UPDATE SET "bridge_address" = $1`;
+    pool.query(queryText, [req.body.bridge_address])
       .then(response => {
         res.sendStatus(200);
       })
       .catch(error => {
-        console.log('Error on PUT: ', error);
+        console.log('Error saving bridge_address: ', error);
         res.sendStatus(500);
       })
   } else {
     res.sendStatus(403);
-  } 
+  }
+});
+
+router.post('/token', (req, res) => {
+  if(req.isAuthenticated()) {
+    let queryText = `UPDATE "users" SET "token" = $1
+                     WHERE "username" = $2`;
+    pool.query(queryText, [req.body.token, req.user.username])
+      .then(response => {
+        res.sendStatus(200);
+      })
+      .catch(error => {
+        console.log('Error saving user token: ', error);
+        res.sendStatus(500);
+      })
+  } else {
+    res.sendStatus(403);
+  }
 });
 
 router.post('/light', (req, res) => {

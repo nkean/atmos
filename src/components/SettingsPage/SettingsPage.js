@@ -5,11 +5,13 @@ import { Button, Icon, Input } from 'antd';
 
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
+import { CONFIG_ACTIONS, saveConfig } from '../../redux/actions/configActions';
 
 const Search = Input.Search;
 
 const mapStateToProps = state => ({
   user: state.user,
+  config: state.config,
 });
 
 class SettingsPage extends Component {
@@ -17,15 +19,22 @@ class SettingsPage extends Component {
     super(props);
 
     this.state = {
-      apiToken: '',
+      userToken: '',
       bridgeIP: '',
       lights: [],
     };
   }
 
+  componentWillReceiveProps() {
+      this.setState({
+        userToken: this.props.user.userToken,
+        bridgeIP: this.props.config.bridgeIP,
+      });
+  }
+
   componentDidMount() {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
-    this.getSettings();
+    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_CONFIG });
   }
 
   componentDidUpdate() {
@@ -42,54 +51,33 @@ class SettingsPage extends Component {
 
   fetchToken = (userName) => {
     const url = `http://${this.state.bridgeIP}/api`;
-    const config = {"devicetype": `atmos#${userName}`};
-    if(this.state.apiToken === ''){
-    axios.post(url, config)
-      .then(response => {
-        this.setState({
-          apiToken: response.data[0].success.username,
-        });
-      })
-      .catch(error => {
-        console.log('Error getting API Token: ', error);
-      })
+    const config = { "devicetype": `atmos#${userName}` };
+    if (this.state.userToken === '') {
+      axios.post(url, config)
+        .then(response => {
+          this.setState({
+            userToken: response.data[0].success.username,
+          });
+        })
+        .catch(error => {
+          console.log('Error getting API Token: ', error);
+        })
     } else {
       alert('Token already exists for this username');
     }
   }
 
   saveSettings = () => {
-    const data = this.state;
-    axios.post('/api/settings/save', data)
-      .then(response => {
-        console.log(`Successfully saved user settings for ${this.props.user.userName}`);
-      })
-      .catch(error => {
-        alert('There was an error saving settings: ', error);
-      })
-
-  }
-
-  getSettings = () => {
-    axios.get('/api/settings/fetch')
-      .then(response => {
-        this.setState({
-          apiToken: response.data.token,
-          bridgeIP: response.data.bridge,
-        });
-      })
-      .catch(error => {
-        console.log('Error fetching user settings: ', error);
-      })
+    this.props.dispatch(saveConfig(this.state.bridgeIP, this.state.userToken));
   }
 
   getLights = () => {
-    const url = `http://${this.state.bridgeIP}/api/${this.state.apiToken}/lights`;
+    const url = `http://${this.state.bridgeIP}/api/${this.state.userToken}/lights`;
     axios.get(url)
       .then(response => {
         let lights = response.data;
         let allLights = [];
-        for(const key of Object.keys(lights)) {
+        for (const key of Object.keys(lights)) {
           const newLight = {
             id: key,
             type: lights[key].type,
@@ -124,32 +112,32 @@ class SettingsPage extends Component {
     if (this.props.user.userName) {
       content = (
         <div>
-          <Input 
+          <Input
             placeholder="Bridge IP (ex: 192.168.1.100)"
             onChange={this.handleInputChangeFor('bridgeIP')}
             value={this.state.bridgeIP}
-            style={{width: 200}}
+            style={{ width: 250 }}
           />
-          <Search 
+          <Search
             placeholder="Hue API Token"
             enterButton="Fetch New"
-            onChange={this.handleInputChangeFor('apiToken')}
-            value={this.state.apiToken}
+            onChange={this.handleInputChangeFor('userToken')}
+            value={this.state.userToken}
             onSearch={() => this.fetchToken(this.props.user.userName)}
-            style={{width: 500}}
+            style={{ width: 500 }}
           />
           <Button
             type="primary"
             onClick={() => this.saveSettings()}
           >
-            <Icon type="save"/>
+            <Icon type="save" />
             Save
           </Button>
           <Button
             type="primary"
             onClick={() => this.getLights()}
           >
-            <Icon type="bulb"/>
+            <Icon type="bulb" />
             Get Lights
           </Button>
         </div>

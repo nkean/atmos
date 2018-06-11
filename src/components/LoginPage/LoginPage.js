@@ -33,7 +33,7 @@ class LoginPage extends Component {
     }
   }
 
-  login = (event) => {
+  login = event => {
     event.preventDefault();
 
     if (this.state.username === '' || this.state.password === '') {
@@ -71,40 +71,6 @@ class LoginPage extends Component {
     return (
       <div>
         {this.renderAlert()}
-        {/* <form onSubmit={this.login}>
-          <h1>Login</h1>
-          <div>
-            <label htmlFor="username">
-              Username:
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleInputChangeFor('username')}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="password">
-              Password:
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleInputChangeFor('password')}
-              />
-            </label>
-          </div>
-          <div>
-            <Button
-              type="primary"
-              htmlType="submit"
-            >
-              Log In
-            </Button>
-            <Link to="/register">Register</Link>
-          </div>
-        </form> */}
         <Form onSubmit={this.login}>
           <FormItem>
               <Input

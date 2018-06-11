@@ -97,7 +97,7 @@ class SettingsPage extends Component {
 
   sendLights = () => {
     const data = this.state.lights;
-    axios.post('/api/settings/light', data)
+    axios.post('/api/config/light', data)
       .then(response => {
         console.log('Lights saved to database');
       })

@@ -12,6 +12,7 @@ const Search = Input.Search;
 const mapStateToProps = state => ({
   user: state.user,
   config: state.config,
+  hue: state.hue,
 });
 
 class SettingsPage extends Component {
@@ -34,12 +35,17 @@ class SettingsPage extends Component {
         this.setState({
           bridgeIP: nextProps.config.bridgeIP,
         });
+      } else if (nextProps.hue.lights !== this.state.lights) {
+        this.setState({
+          lights: nextProps.hue.lights,
+        });
       }
   }
 
   componentDidMount() {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_CONFIG });
+    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_LIGHTS });
   }
 
   componentDidUpdate() {

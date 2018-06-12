@@ -7,10 +7,17 @@ export function getLights(bridgeIP, userToken) {
       let lights = response.data;
       let allLights = [];
       for (const key of Object.keys(lights)) {
+        let lightType = lights[key].type;
+        let lightName = lights[key].name;
+        if (lightType === 'Extended color light') {
+          lightType = 'color';
+        } else if (lightType === 'Dimmable light') {
+          lightType = 'white';
+        }
         const newLight = {
           id: key,
-          type: lights[key].type,
-          name: lights[key].name,
+          type: lightType,
+          name: lightName,
         };
         allLights.push(newLight);
       }

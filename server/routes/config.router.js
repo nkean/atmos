@@ -3,7 +3,7 @@ const pool = require('../modules/pool');
 const router = express.Router();
 
 router.get('/fetch', (req, res) => {
-  if(req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     let queryText = `SELECT * FROM "config"`;
     pool.query(queryText)
       .then(response => {
@@ -19,7 +19,7 @@ router.get('/fetch', (req, res) => {
 });
 
 router.post('/bridge', (req, res) => {
-  if(req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     let queryText = `INSERT INTO "config" ("id", "bridge_address")
                      VALUES (1, $1)
                      ON CONFLICT ("id")
@@ -38,7 +38,7 @@ router.post('/bridge', (req, res) => {
 });
 
 router.post('/token', (req, res) => {
-  if(req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     let queryText = `UPDATE "users" SET "token" = $1
                      WHERE "username" = $2`;
     pool.query(queryText, [req.body.token, req.user.username])
@@ -55,35 +55,29 @@ router.post('/token', (req, res) => {
 });
 
 router.post('/lights', (req, res) => {
-  if(req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     const lights = req.body.lights;
-    let queryText = `DELETE FROM "lights"`;
-    pool.query(queryText)
-      .then(response => {
-        queryText = `INSERT INTO "lights" ("id", "type", "name")
-                     VALUES ($1, $2, $3)`;
-        lights.forEach(light => {
-          pool.query(queryText, [light.id, light.type, light.name])
-            .then(response => {
-              console.log('Added light to database');
-            })
-            .catch(error => {
-              console.log('Error with INSERT: ', error);
-            })
-        });
-        res.sendStatus(201);
-      })
-      .catch(error => {
-        console.log('Error with DELETE: ', error);
-        res.sendStatus(500);
-      })
+    let queryText = `INSERT INTO "lights" ("id", "type", "name")
+                     VALUES ($1, $2, $3)
+                     ON CONFLICT ("id")
+                     DO UPDATE SET "type" = $2, "name" = $3`;
+    lights.forEach(light => {
+      pool.query(queryText, [light.id, light.type, light.name])
+        .then(response => {
+          console.log('Added light to database: ', light.name);
+        })
+        .catch(error => {
+          console.log('Error with INSERT to "lights": ', error);
+        })
+    });
+    res.sendStatus(201);
   } else {
     res.sendStatus(403);
   }
 });
 
 router.get('/lights', (req, res) => {
-  if(req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     let queryText = `SELECT * FROM "lights"`;
     pool.query(queryText)
       .then(response => {

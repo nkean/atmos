@@ -10,6 +10,18 @@ const lights = (state = [], action) => {
   }
 };
 
+const isLoading = (state = false, action) => {
+  switch (action.type) {
+    case HUE_ACTIONS.REQUEST_START:
+      return true;
+    case HUE_ACTIONS.REQUEST_DONE:
+      return false;
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
+  isLoading,
   lights,
 });

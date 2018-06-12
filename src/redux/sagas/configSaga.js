@@ -15,7 +15,7 @@ function* fetchConfig() {
       config,
     });
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
-  } catch(error) {
+  } catch (error) {
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
     console.log('FAILED TO GET CONFIG -- CHECK SERVER CONSOLE', error);
   }
@@ -30,7 +30,7 @@ function* fetchLights() {
       lights,
     });
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
-  } catch(error) {
+  } catch (error) {
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
     console.log('FAILED TO GET LIGHTS -- CHECK SERVER CONSOLE', error);
   }
@@ -52,7 +52,7 @@ function* saveConfig(action) {
       user,
     });
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
-  } catch(error) {
+  } catch (error) {
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
     console.log('FAILED TO SAVE CONFIG -- CHECK SERVER CONSOLE', error);
   }
@@ -65,10 +65,12 @@ function* updateLights(action) {
     const lights = yield getLights();
     yield put({
       type: HUE_ACTIONS.SET_LIGHTS,
-      lights,
+      payload: {
+        lights,
+      },
     });
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
-  } catch(error) {
+  } catch (error) {
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
     console.log('FAILED TO UPDATE LIGHTS -- CHECK SERVER CONSOLE', error);
   }

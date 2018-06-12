@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import axios from 'axios';
 import { Button, Icon, Input } from 'antd';
 
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
-import { CONFIG_ACTIONS, saveConfig, updateLights } from '../../redux/actions/configActions';
+import { CONFIG_ACTIONS, saveConfig } from '../../redux/actions/configActions';
+import { fetchLights, fetchToken } from '../../redux/actions/hueActions';
 
 const Search = Input.Search;
 
@@ -25,11 +25,16 @@ class SettingsPage extends Component {
     };
   }
 
-  componentWillReceiveProps() {
-      this.setState({
-        userToken: this.props.user.userToken,
-        bridgeIP: this.props.config.bridgeIP,
-      });
+  componentWillReceiveProps(nextProps) {
+      if (nextProps.user.userToken !== this.state.userToken) {
+        this.setState({
+          userToken: nextProps.user.userToken,
+        });
+      } else if (nextProps.config.bridgeIP !== this.state.bridgeIP) {
+        this.setState({
+          bridgeIP: nextProps.config.bridgeIP,
+        });
+      }
   }
 
   componentDidMount() {
@@ -49,21 +54,11 @@ class SettingsPage extends Component {
     });
   }
 
-  fetchToken = (userName) => {
-    const url = `http://${this.state.bridgeIP}/api`;
-    const config = { "devicetype": `atmos#${userName}` };
+  getToken = () => {
     if (this.state.userToken === null) {
-      axios.post(url, config)
-        .then(response => {
-          this.setState({
-            userToken: response.data[0].success.username,
-          });
-        })
-        .catch(error => {
-          console.log('Error getting API Token: ', error);
-        })
+      this.props.dispatch(fetchToken(this.state.bridgeIP, this.props.user.userName));
     } else {
-      alert('Token already exists for this username');
+      alert('A token already exists for this username');
     }
   }
 
@@ -71,32 +66,8 @@ class SettingsPage extends Component {
     this.props.dispatch(saveConfig(this.state.bridgeIP, this.state.userToken));
   }
 
-  saveLights = () => {
-    this.props.dispatch(updateLights(this.state.lights));
-  }
-
   getLights = () => {
-    const url = `http://${this.state.bridgeIP}/api/${this.state.userToken}/lights`;
-    axios.get(url)
-      .then(response => {
-        let lights = response.data;
-        let allLights = [];
-        for (const key of Object.keys(lights)) {
-          const newLight = {
-            id: key,
-            type: lights[key].type,
-            name: lights[key].name,
-          };
-          allLights.push(newLight);
-        }
-        this.setState({
-          lights: allLights,
-        });
-        this.saveLights();
-      })
-      .catch(error => {
-        console.log('Error with GET to Hue bridge: ', error);
-      })
+    this.props.dispatch(fetchLights(this.state.bridgeIP, this.state.userToken));
   }
 
   render() {
@@ -116,7 +87,7 @@ class SettingsPage extends Component {
             enterButton="Fetch New"
             onChange={this.handleInputChangeFor('userToken')}
             value={this.state.userToken}
-            onSearch={() => this.fetchToken(this.props.user.userName)}
+            onSearch={() => this.getToken()}
             style={{ width: 500 }}
           />
           <Button

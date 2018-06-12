@@ -92,4 +92,20 @@ router.get('/lights', (req, res) => {
   }
 });
 
+router.get('/rooms', (req, res) => {
+  if(req.isAuthenticated()) {
+    let queryText = `SELECT * FROM "rooms"`;
+    pool.query(queryText)
+      .then(response => {
+        res.send(response.rows);
+      })
+      .catch(error => {
+        console.log('Error with SELECT from rooms: ', error);
+        res.sendStatus(500);
+      })
+  } else {
+    res.sendStatus(403);
+  }
+});
+
 module.exports = router;

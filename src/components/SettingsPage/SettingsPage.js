@@ -23,6 +23,7 @@ class SettingsPage extends Component {
       userToken: '',
       bridgeIP: '',
       lights: [],
+      rooms: [],
     };
   }
 
@@ -39,6 +40,10 @@ class SettingsPage extends Component {
         this.setState({
           lights: nextProps.hue.lights,
         });
+      } else if (nextProps.config.rooms !== this.state.rooms) {
+        this.setState({
+          rooms: nextProps.config.rooms,
+        });
       }
   }
 
@@ -46,6 +51,7 @@ class SettingsPage extends Component {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_CONFIG });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_LIGHTS });
+    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_ROOMS });
   }
 
   componentDidUpdate() {

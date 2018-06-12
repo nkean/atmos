@@ -10,9 +10,15 @@ export function getConfig() {
 
 export function getLights() {
   return axios.get('/api/config/lights')
-    .then(response => {
-      return response.data;
+    .then(response => response.data)
+    .catch(error => {
+      throw error.response || error;
     })
+}
+
+export function getRooms() {
+  return axios.get('/api/config/rooms')
+    .then(response => response.data)
     .catch(error => {
       throw error.response || error;
     })

@@ -54,9 +54,9 @@ router.post('/token', (req, res) => {
   }
 });
 
-router.post('/light', (req, res) => {
+router.post('/lights', (req, res) => {
   if(req.isAuthenticated()) {
-    const lights = req.body;
+    const lights = req.body.lights;
     let queryText = `DELETE FROM "lights"`;
     pool.query(queryText)
       .then(response => {
@@ -82,7 +82,7 @@ router.post('/light', (req, res) => {
   }
 });
 
-router.get('/light', (req, res) => {
+router.get('/lights', (req, res) => {
   if(req.isAuthenticated()) {
     let queryText = `SELECT * FROM "lights"`;
     pool.query(queryText)

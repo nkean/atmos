@@ -8,8 +8,26 @@ export function getConfig() {
     })
 }
 
+export function getLights() {
+  return axios.get('/api/config/lights')
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      throw error.response || error;
+    })
+}
+
 export function saveBridgeAddress(bridgeIP) {
   return axios.post('/api/config/bridge', { "bridge_address": bridgeIP })
+    .then(response => response.data)
+    .catch(error => {
+      throw error.response || error;
+    })
+}
+
+export function saveLights(lights) {
+  return axios.post('/api/config/lights', {"lights": lights})
     .then(response => response.data)
     .catch(error => {
       throw error.response || error;

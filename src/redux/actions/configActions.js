@@ -1,7 +1,9 @@
 export const CONFIG_ACTIONS = {
-  SET_CONFIG: 'SET_CONFIG',
   FETCH_CONFIG: 'FETCH_CONFIG',
+  FETCH_LIGHTS: 'FETCH_LIGHTS',
+  SET_CONFIG: 'SET_CONFIG',
   SAVE_CONFIG: 'SAVE_CONFIG',
+  UPDATE_LIGHTS: 'UPDATE_LIGHTS',
   REQUEST_START: 'REQUEST_START_CONFIG_ACTION',
   REQUEST_DONE: 'REQUEST_DONE_CONFIG_ACTION',
 };
@@ -11,5 +13,12 @@ export const saveConfig = (bridgeIP, userToken) => ({
   payload: {
     bridgeIP,
     userToken,
+  },
+});
+
+export const updateLights = (lights) => ({
+  type: CONFIG_ACTIONS.UPDATE_LIGHTS,
+  payload: {
+    lights,
   },
 });

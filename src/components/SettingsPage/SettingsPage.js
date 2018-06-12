@@ -5,7 +5,7 @@ import { Button, Icon, Input } from 'antd';
 
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
-import { CONFIG_ACTIONS, saveConfig } from '../../redux/actions/configActions';
+import { CONFIG_ACTIONS, saveConfig, updateLights } from '../../redux/actions/configActions';
 
 const Search = Input.Search;
 
@@ -52,7 +52,7 @@ class SettingsPage extends Component {
   fetchToken = (userName) => {
     const url = `http://${this.state.bridgeIP}/api`;
     const config = { "devicetype": `atmos#${userName}` };
-    if (this.state.userToken === '') {
+    if (this.state.userToken === null) {
       axios.post(url, config)
         .then(response => {
           this.setState({
@@ -69,6 +69,10 @@ class SettingsPage extends Component {
 
   saveSettings = () => {
     this.props.dispatch(saveConfig(this.state.bridgeIP, this.state.userToken));
+  }
+
+  saveLights = () => {
+    this.props.dispatch(updateLights(this.state.lights));
   }
 
   getLights = () => {
@@ -88,21 +92,10 @@ class SettingsPage extends Component {
         this.setState({
           lights: allLights,
         });
-        this.sendLights();
+        this.saveLights();
       })
       .catch(error => {
         console.log('Error with GET to Hue bridge: ', error);
-      })
-  }
-
-  sendLights = () => {
-    const data = this.state.lights;
-    axios.post('/api/config/light', data)
-      .then(response => {
-        console.log('Lights saved to database');
-      })
-      .catch(error => {
-        console.log('Error with POST to database: ', error);
       })
   }
 

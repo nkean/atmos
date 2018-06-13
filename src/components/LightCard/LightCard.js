@@ -9,7 +9,7 @@ class LightCard extends Component {
   lightOn = () => {
     console.log('light on');
     const url = `http://${this.props.bridgeIP}/api/${this.props.apiToken}/lights/${this.props.light.id}/state`;
-    axios.put(url, {"on": true})
+    axios.put(url, {"on": true, "bri": 80})
       .then(response => {
         console.log(response);
       })

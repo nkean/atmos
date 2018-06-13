@@ -61,13 +61,11 @@ function* saveConfig(action) {
 function* updateLights(action) {
   try {
     yield put({ type: CONFIG_ACTIONS.REQUEST_START });
-    yield saveLights(action.payload.lights);
+    yield saveLights(action.lights);
     const lights = yield getLights();
     yield put({
       type: HUE_ACTIONS.SET_LIGHTS,
-      payload: {
-        lights,
-      },
+      lights,
     });
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
   } catch (error) {
@@ -77,7 +75,7 @@ function* updateLights(action) {
 }
 
 function* fetchRooms() {
-  try{
+  try {
     yield put({ type: CONFIG_ACTIONS.REQUEST_START });
     const rooms = yield getRooms();
     yield put({
@@ -85,7 +83,7 @@ function* fetchRooms() {
       rooms,
     });
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
-  } catch(error) {
+  } catch (error) {
     yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
     console.log('FAILED TO FETCH ROOMS -- CHECK SERVER CONSOLE', error);
   }

@@ -24,3 +24,10 @@ export const updateLights = (lights) => ({
     lights,
   },
 });
+
+export const updateRoom = (room) => ({
+  type: CONFIG_ACTIONS.UPDATE_ROOM,
+  payload: {
+    room,
+  },
+});

@@ -57,12 +57,12 @@ router.post('/token', (req, res) => {
 router.post('/lights', (req, res) => {
   if (req.isAuthenticated()) {
     const lights = req.body.lights;
-    let queryText = `INSERT INTO "lights" ("id", "type", "name")
-                     VALUES ($1, $2, $3)
+    let queryText = `INSERT INTO "lights" ("id", "type", "name", "room_id")
+                     VALUES ($1, $2, $3, $4)
                      ON CONFLICT ("id")
-                     DO UPDATE SET "type" = $2, "name" = $3`;
+                     DO UPDATE SET "type" = $2, "name" = $3, "room_id" = COALESCE($4, "lights"."room_id")`;
     lights.forEach(light => {
-      pool.query(queryText, [light.id, light.type, light.name])
+      pool.query(queryText, [light.id, light.type, light.name, light.room_id])
         .then(response => {
           console.log('Added light to database: ', light.name);
         })

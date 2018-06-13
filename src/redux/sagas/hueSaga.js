@@ -10,9 +10,7 @@ function* fetchLights(action) {
     const lights = yield getLights(action.payload.bridgeIP, action.payload.userToken);
     yield put({
       type: CONFIG_ACTIONS.UPDATE_LIGHTS,
-      payload: {
-        lights,
-      },
+      lights,
     });
     yield put({ type: HUE_ACTIONS.REQUEST_DONE });
   } catch (error) {

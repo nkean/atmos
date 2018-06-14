@@ -68,6 +68,7 @@ router.post('/lights', (req, res) => {
         })
         .catch(error => {
           console.log('Error with INSERT to "lights": ', error);
+          res.sendStatus(500);
         })
     });
     res.sendStatus(201);
@@ -78,7 +79,8 @@ router.post('/lights', (req, res) => {
 
 router.get('/lights', (req, res) => {
   if (req.isAuthenticated()) {
-    let queryText = `SELECT * FROM "lights"`;
+    let queryText = `SELECT * FROM "lights"
+                     ORDER BY "name"`;
     pool.query(queryText)
       .then(response => {
         res.send(response.rows);
@@ -107,5 +109,26 @@ router.get('/rooms', (req, res) => {
     res.sendStatus(403);
   }
 });
+
+router.post('/room', (req, res) => {
+  if(req.isAuthenticated()) {
+    const room = req.body.room;
+    let queryText = `INSERT INTO "rooms" ("id", "name")
+                     VALUES ($1, $2)
+                     ON CONFLICT ("id")
+                     DO UPDATE SET "name" = $2`;
+    pool.query(queryText, [room.id, room.name])
+      .then(response => {
+        console.log('Updated room in database: ', room.name);
+        res.sendStatus(201);
+      })
+      .catch(error => {
+        console.log('Error with UPDATE to "rooms": ', error);
+        res.sendStatus(500);
+      })
+  } else {
+    res.sendStatus(403);
+  }
+})
 
 module.exports = router;

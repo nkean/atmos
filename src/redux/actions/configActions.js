@@ -6,28 +6,23 @@ export const CONFIG_ACTIONS = {
   SET_ROOMS: 'SET_ROOMS',
   SAVE_CONFIG: 'SAVE_CONFIG',
   UPDATE_LIGHTS: 'UPDATE_LIGHTS',
+  UPDATE_ROOM: 'UPDATE_ROOM',
   REQUEST_START: 'REQUEST_START_CONFIG_ACTION',
   REQUEST_DONE: 'REQUEST_DONE_CONFIG_ACTION',
 };
 
 export const saveConfig = (bridgeIP, userToken) => ({
   type: CONFIG_ACTIONS.SAVE_CONFIG,
-  payload: {
-    bridgeIP,
-    userToken,
-  },
+  bridgeIP,
+  userToken,
 });
 
 export const updateLights = (lights) => ({
   type: CONFIG_ACTIONS.UPDATE_LIGHTS,
-  payload: {
-    lights,
-  },
+  lights,
 });
 
 export const updateRoom = (room) => ({
   type: CONFIG_ACTIONS.UPDATE_ROOM,
-  payload: {
-    room,
-  },
+  room,
 });

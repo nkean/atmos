@@ -3,7 +3,7 @@ import { CONFIG_ACTIONS } from '../actions/configActions';
 import { USER_ACTIONS } from '../actions/userActions';
 import { HUE_ACTIONS } from '../actions/hueActions';
 import { callUser } from '../requests/userRequests';
-import { saveBridgeAddress, saveUserToken, getConfig, getLights, getRooms, saveLights } from '../requests/configRequests';
+import { saveBridgeAddress, saveUserToken, getConfig, getLights, getRooms, saveLights, saveRoom } from '../requests/configRequests';
 
 
 function* fetchConfig() {
@@ -39,8 +39,8 @@ function* fetchLights() {
 function* saveConfig(action) {
   try {
     yield put({ type: CONFIG_ACTIONS.REQUEST_START });
-    yield saveBridgeAddress(action.payload.bridgeIP);
-    yield saveUserToken(action.payload.userToken);
+    yield saveBridgeAddress(action.bridgeIP);
+    yield saveUserToken(action.userToken);
     const config = yield getConfig();
     yield put({
       type: CONFIG_ACTIONS.SET_CONFIG,
@@ -89,12 +89,25 @@ function* fetchRooms() {
   }
 }
 
+function* updateRoom(action) {
+  try {
+    yield put({ type: CONFIG_ACTIONS.REQUEST_START });
+    yield saveRoom(action.room);
+    yield put({ type: CONFIG_ACTIONS.FETCH_ROOMS });
+    yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
+  } catch (error) {
+    yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
+    console.log('FAILED TO UPDATE ROOM -- CHECK SERVER CONSOLE', error);
+  }
+}
+
 function* configSaga() {
   yield takeLatest(CONFIG_ACTIONS.FETCH_CONFIG, fetchConfig);
   yield takeLatest(CONFIG_ACTIONS.FETCH_LIGHTS, fetchLights);
   yield takeLatest(CONFIG_ACTIONS.FETCH_ROOMS, fetchRooms);
   yield takeLatest(CONFIG_ACTIONS.SAVE_CONFIG, saveConfig);
   yield takeLatest(CONFIG_ACTIONS.UPDATE_LIGHTS, updateLights);
+  yield takeLatest(CONFIG_ACTIONS.UPDATE_ROOM, updateRoom);
 }
 
 export default configSaga;

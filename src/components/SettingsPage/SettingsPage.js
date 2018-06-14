@@ -4,7 +4,7 @@ import { Button, Icon, Input, Modal, Radio } from 'antd';
 
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
-import { CONFIG_ACTIONS, saveConfig } from '../../redux/actions/configActions';
+import { CONFIG_ACTIONS, saveConfig, updateLights, updateRoom } from '../../redux/actions/configActions';
 import { fetchLights, fetchToken } from '../../redux/actions/hueActions';
 
 const Search = Input.Search;
@@ -22,8 +22,6 @@ class SettingsPage extends Component {
     this.state = {
       userToken: '',
       bridgeIP: '',
-      lights: [],
-      rooms: [],
       showRoomModal: false,
       selectedRoom: {},
       assignedLights: [],
@@ -38,14 +36,6 @@ class SettingsPage extends Component {
     } else if (nextProps.config.bridgeIP !== this.state.bridgeIP) {
       this.setState({
         bridgeIP: nextProps.config.bridgeIP,
-      });
-    } else if (nextProps.hue.lights !== this.state.lights) {
-      this.setState({
-        lights: nextProps.hue.lights,
-      });
-    } else if (nextProps.config.rooms !== this.state.rooms) {
-      this.setState({
-        rooms: nextProps.config.rooms,
       });
     }
   }
@@ -94,16 +84,20 @@ class SettingsPage extends Component {
     this.props.dispatch(fetchLights(this.state.bridgeIP, this.state.userToken));
   }
 
-  showRoomModal = (room) => {
+  showRoomModal = room => {
     this.setState({
+      assignedLights: [...this.props.hue.lights],
       selectedRoom: room,
       showRoomModal: true,
     });
   }
 
   roomModalSave = () => {
+    this.props.dispatch(updateLights(this.state.assignedLights));
+    this.props.dispatch(updateRoom(this.state.selectedRoom));
     this.setState({
       showRoomModal: false,
+      selectedRoom: {},
     });
   }
 
@@ -112,6 +106,57 @@ class SettingsPage extends Component {
       showRoomModal: false,
       selectedRoom: {},
       assignedLights: [],
+    });
+  }
+
+  handleModalLightName = (index) => {
+    let assignedLightsNew = this.state.assignedLights;
+    let inputValue = this.refs.modalLightName.input.value;
+    assignedLightsNew[index] = {
+      ...this.state.assignedLights[index],
+      name: inputValue,
+    };
+    this.setState({
+      assignedLights: assignedLightsNew,
+    });
+  }
+
+
+  handleLightChangeRoom = index => {
+    let currentRoomId = this.state.assignedLights[index].room_id;
+    let prevRoomId = this.props.hue.lights[index].room_id;
+    let assignedLights = this.state.assignedLights;
+    let radioValue = this.refs.modalRoomId.props.value;
+
+    if (currentRoomId !== radioValue) {
+      assignedLights[index] = {
+        ...this.state.assignedLights[index],
+        room_id: radioValue,
+      };
+    } else if (currentRoomId === radioValue && prevRoomId === radioValue) {
+      assignedLights[index] = {
+        ...this.state.assignedLights[index],
+        room_id: null,
+      };
+    } else {
+      assignedLights[index] = {
+        ...this.state.assignedLights[index],
+        room_id: prevRoomId,
+      };
+    }
+
+    this.setState({
+      assignedLights: assignedLights,
+    });
+  }
+
+  addRoom = () => {
+    this.setState({
+      assignedLights: [...this.props.hue.lights],
+      selectedRoom: {
+        id: this.props.config.rooms.length + 1,
+      },
+      showRoomModal: true,
     });
   }
 
@@ -150,7 +195,8 @@ class SettingsPage extends Component {
             Get Lights
           </Button>
           <div>
-            {this.state.rooms.map(room => <Button type="primary" onClick={() => this.showRoomModal(room)} key={room.id}>{room.name}</Button>)}
+            {this.props.config.rooms.map(room => <Button type="primary" onClick={() => this.showRoomModal(room)} key={room.id}>{room.name}</Button>)}
+            <Button type="primary" onClick={() => this.addRoom()}>Add Room</Button>
           </div>
           <Modal
             title="Configure Room Settings"
@@ -166,13 +212,15 @@ class SettingsPage extends Component {
               value={this.state.selectedRoom.name}
               ref="modalRoomName"
             />
-            {this.state.lights.map(light =>
+            {this.state.assignedLights.map((light, index) =>
               <Radio
                 value={this.state.selectedRoom.id}
                 key={light.id}
                 checked={light.room_id === this.state.selectedRoom.id ? true : false}
+                onClick={() => this.handleLightChangeRoom(index)}
+                ref="modalRoomId"
               >
-                {light.name}
+              {light.room_id === this.state.selectedRoom.id ? <Input placeholder="Light Name" onChange={() => this.handleModalLightName(index)} value={light.name} ref="modalLightName" style={{width: 175}}/> : <div>{light.name}</div>}
               </Radio>)
             }
           </Modal>

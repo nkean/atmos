@@ -40,6 +40,14 @@ export function saveLights(lights) {
     })
 }
 
+export function saveRoom(room) {
+  return axios.post('/api/config/room', {"room": room})
+    .then(response => response.data)
+    .catch(error => {
+      throw error.response || error;
+    })
+}
+
 export function saveUserToken(userToken) {
   return axios.post('/api/config/token', { "token": userToken})
     .then(response => response.data)

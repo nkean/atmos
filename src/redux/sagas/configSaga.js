@@ -3,7 +3,14 @@ import { CONFIG_ACTIONS } from '../actions/configActions';
 import { USER_ACTIONS } from '../actions/userActions';
 import { HUE_ACTIONS } from '../actions/hueActions';
 import { callUser } from '../requests/userRequests';
-import { saveBridgeAddress, saveUserToken, getConfig, getLights, getRooms, saveLights, saveRoom } from '../requests/configRequests';
+import { saveBridgeAddress, 
+         saveUserToken, 
+         getConfig,
+         getGroups, 
+         getLights, 
+         getRooms, 
+         saveLights, 
+         saveRoom } from '../requests/configRequests';
 
 
 function* fetchConfig() {
@@ -101,8 +108,24 @@ function* updateRoom(action) {
   }
 }
 
+function* fetchGroups() {
+  try {
+    yield put({ type: CONFIG_ACTIONS.REQUEST_START });
+    const groups = yield getGroups();
+    yield put({
+      type: CONFIG_ACTIONS.SET_GROUPS,
+      groups,
+    });
+    yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
+  } catch (error) {
+    yield put({ type: CONFIG_ACTIONS.REQUEST_DONE });
+    console.log('FAILED TO FETCH GROUPS -- CHECK SERVER CONSOLE', error);
+  }
+}
+
 function* configSaga() {
   yield takeLatest(CONFIG_ACTIONS.FETCH_CONFIG, fetchConfig);
+  yield takeLatest(CONFIG_ACTIONS.FETCH_GROUPS, fetchGroups);
   yield takeLatest(CONFIG_ACTIONS.FETCH_LIGHTS, fetchLights);
   yield takeLatest(CONFIG_ACTIONS.FETCH_ROOMS, fetchRooms);
   yield takeLatest(CONFIG_ACTIONS.SAVE_CONFIG, saveConfig);

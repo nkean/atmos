@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import LightCard from '../LightCard/LightCard';
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { CONFIG_ACTIONS } from '../../redux/actions/configActions';
@@ -17,7 +16,9 @@ class RoomsPage extends Component {
   componentDidMount() {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_CONFIG });
+    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_GROUPS });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_LIGHTS });
+    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_ROOMS });
   }
 
   componentDidUpdate() {
@@ -32,12 +33,7 @@ class RoomsPage extends Component {
     if (this.props.user.userName) {
       content = (
         <div>
-          {this.props.hue.lights.map(light => <LightCard
-            key={light.id}
-            light={light}
-            apiToken={this.props.user.userToken}
-            bridgeIP={this.props.config.bridgeIP}
-          />)}
+          
         </div>
       );
     }

@@ -96,7 +96,8 @@ router.get('/lights', (req, res) => {
 
 router.get('/rooms', (req, res) => {
   if(req.isAuthenticated()) {
-    let queryText = `SELECT * FROM "rooms"`;
+    let queryText = `SELECT * FROM "rooms"
+                     ORDER BY "name"`;
     pool.query(queryText)
       .then(response => {
         res.send(response.rows);
@@ -129,6 +130,25 @@ router.post('/room', (req, res) => {
   } else {
     res.sendStatus(403);
   }
-})
+});
+
+router.get('/groups', (req, res) => {
+  if(req.isAuthenticated()) {
+    let queryText = `SELECT "lights"."id", "lights"."name", "lights"."type", "lights"."room_id", "rooms"."name" AS "room_name"
+                     FROM "lights"
+                     INNER JOIN "rooms" ON "lights"."room_id" = "rooms"."id"
+                     ORDER BY "rooms"."name"`;
+    pool.query(queryText)
+      .then(response => {
+        res.send(response.rows);
+      })
+      .catch(error => {
+        console.log('Error with SELECT for groups: ', error);
+        res.sendStatus(500);
+      })
+  } else {
+    res.sendStatus(403);
+  }
+});
 
 module.exports = router;

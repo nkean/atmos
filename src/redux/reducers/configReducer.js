@@ -19,6 +19,15 @@ const rooms = (state = [], action) => {
   }
 };
 
+const groups = (state = {}, action) => {
+  switch (action.type) {
+    case CONFIG_ACTIONS.SET_GROUPS:
+      return action.groups || state;
+    default:
+      return state;
+  }
+};
+
 const isLoading = (state = false, action) => {
   switch (action.type) {
     case CONFIG_ACTIONS.REQUEST_START:
@@ -32,6 +41,7 @@ const isLoading = (state = false, action) => {
 
 export default combineReducers({
   bridgeIP,
+  groups,
   isLoading,
   rooms,
 });

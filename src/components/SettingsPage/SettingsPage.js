@@ -93,8 +93,8 @@ class SettingsPage extends Component {
   }
 
   roomModalSave = () => {
-    this.props.dispatch(updateLights(this.state.assignedLights));
     this.props.dispatch(updateRoom(this.state.selectedRoom));
+    this.props.dispatch(updateLights(this.state.assignedLights));
     this.setState({
       showRoomModal: false,
       selectedRoom: {},
@@ -109,7 +109,7 @@ class SettingsPage extends Component {
     });
   }
 
-  handleModalLightName = (index) => {
+  handleModalLightName = index => {
     let assignedLightsNew = this.state.assignedLights;
     let inputValue = this.refs.modalLightName.input.value;
     assignedLightsNew[index] = {

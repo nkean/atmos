@@ -1,8 +1,22 @@
 import React, { Component } from 'react';
-import { Card, Collapse, List } from 'antd';
+import { Button, Card, Collapse, Dropdown, Icon, List, Menu } from 'antd';
 import LightListItem from '../LightListItem/LightListItem';
 
+const MenuItem = Menu.Item;
 const Panel = Collapse.Panel;
+
+const buttonMenu = (
+  <Dropdown overlay={
+    <Menu onClick={() => this.onButtonClick()}>
+      <MenuItem key="true">All On</MenuItem>
+      <MenuItem key="false">All Off</MenuItem>
+    </Menu>
+  }>
+    <Button>
+      Lights<Icon type="down" />
+    </Button>
+  </Dropdown>
+);
 
 class RoomCard extends Component {
   constructor(props) {
@@ -28,11 +42,16 @@ class RoomCard extends Component {
     }
   }
 
+  onButtonClick = value => {
+
+  }
+
   render() {
     return (
       <Card
         cover={<img alt="house" src="https://image.flaticon.com/icons/png/512/18/18314.png" />}
         title={this.props.roomName}
+        extra={buttonMenu}
       >
         <Collapse bordered={false} onChange={() => this.onPanelChange()}>
           <Panel

@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { CONFIG_ACTIONS } from '../actions/configActions';
 
-const bridgeIP = (state = '', action) => {
+const bridgeIP = (state = null, action) => {
   switch (action.type) {
     case CONFIG_ACTIONS.SET_CONFIG:
       return action.config.bridge_address || state;

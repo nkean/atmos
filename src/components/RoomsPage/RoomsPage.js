@@ -15,28 +15,6 @@ const mapStateToProps = state => ({
 });
 
 class RoomsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      userToken: '',
-      bridgeIP: '',
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user.userToken !== this.state.userToken) {
-      console.log('Set userToken');
-      this.setState({
-        userToken: nextProps.user.userToken,
-      });
-    } else if (nextProps.config.bridgeIP !== this.state.bridgeIP) {
-      console.log('Set bridgeIP');
-      this.setState({
-        bridgeIP: nextProps.config.bridgeIP,
-      });
-    }
-  }
 
   componentDidMount() {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
@@ -47,6 +25,10 @@ class RoomsPage extends Component {
   componentDidUpdate() {
     if (!this.props.user.isLoading && this.props.user.userName === null) {
       this.props.history.push('home');
+    } else if (this.props.config.bridgeIP !== null && this.props.user.userToken !== null) {
+      if(this.props.hue.states === null && !this.props.hue.isLoading) {
+        this.props.dispatch(fetchStates(this.props.config.bridgeIP, this.props.user.userToken));
+      }
     }
   }
 
@@ -56,13 +38,15 @@ class RoomsPage extends Component {
     if (this.props.user.userName) {
       content = (
         <div>
-          <Row gutter={24} type="flex" justify="start" style={{paddingLeft:16}}>
-          {this.props.config.groups.lights.map((group, index)=> <Col span={6} key={index}>
-                                                                  <RoomCard
-                                                                    group={group}
-                                                                    roomName={this.props.config.groups.names[index]}
-                                                                  />
-                                                                </Col>)}
+          <Row gutter={24} type="flex" justify="start" style={{ margin: 5, maxWidth: 1100 }}>
+            {this.props.config.groups.lights.map((group, index) => (
+              <Col span={6} key={index}>
+                <RoomCard
+                  group={group}
+                  roomName={this.props.config.groups.names[index]}
+                />
+              </Col>
+            ))}
           </Row>
         </div>
       );

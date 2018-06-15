@@ -21,7 +21,7 @@ const isLoading = (state = false, action) => {
   }
 };
 
-const states = (state = {}, action) => {
+const states = (state = null, action) => {
   switch (action.type) {
     case HUE_ACTIONS.SET_STATES:
       return action.states || state;

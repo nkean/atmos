@@ -18,8 +18,10 @@ class LightListItem extends Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({ ...this.props.hue.states[this.props.light.id] });
+  componentWillMount() {
+    if(this.props.hue.states){
+      this.setState({ ...this.props.hue.states[this.props.light.id] });
+    }
   }
 
   onSwitchChange = () => {

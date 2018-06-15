@@ -28,21 +28,28 @@ export function getGroups() {
   return axios.get('/api/config/groups')
     .then(response => {
       let lightArray = response.data;
-      let lightObject = {};
+      let groupObject = {
+        names: [],
+        lights: [],
+      };
       lightArray.forEach(light => {
-        let room = light.room_name;
+        let roomId = light.room_id - 1;
+        let roomName = light.room_name;
         let newLight = {
           id: light.id,
           name: light.name,
           type: light.type,
         };
-        if (lightObject[room]) {
-          lightObject[room] = [...lightObject[room], newLight];
+        if (groupObject.lights[roomId]) {
+          groupObject.lights[roomId] = [...groupObject.lights[roomId], newLight];
         } else {
-          lightObject[room] = [newLight];
+          if(groupObject.names.indexOf(roomName) === -1) {
+            groupObject.names.push(roomName);
+          }
+          groupObject.lights[roomId] = [newLight];
         };
       });
-      return lightObject;
+      return groupObject;
     })
     .catch(error => {
       throw error.response || error;

@@ -2,12 +2,12 @@ import { put, takeLatest } from 'redux-saga/effects';
 import { CONFIG_ACTIONS } from '../actions/configActions';
 import { HUE_ACTIONS } from '../actions/hueActions';
 import { USER_ACTIONS } from '../actions/userActions';
-import { getLights, getToken } from '../requests/hueRequests';
+import { getLights, getStates, getToken } from '../requests/hueRequests';
 
 function* fetchLights(action) {
   try {
     yield put({ type: HUE_ACTIONS.REQUEST_START });
-    const lights = yield getLights(action.payload.bridgeIP, action.payload.userToken);
+    const lights = yield getLights(action.bridgeIP, action.userToken);
     yield put({
       type: CONFIG_ACTIONS.UPDATE_LIGHTS,
       lights,
@@ -19,10 +19,25 @@ function* fetchLights(action) {
   }
 }
 
+function* fetchStates(action) {
+  try {
+    yield put({ type: HUE_ACTIONS.REQUEST_START });
+    const states = yield getStates(action.bridgeIP, action.userToken);
+    yield put({
+      type: HUE_ACTIONS.SET_STATES,
+      states,
+    });
+    yield put({ type: HUE_ACTIONS.REQUEST_DONE });
+  } catch (error) {
+    yield put({ type: HUE_ACTIONS.REQUEST_DONE });
+    console.log('FAILED TO GET STATES FROM HUE BRIDGE', error);
+  }
+}
+
 function* fetchToken(action) {
   try {
     yield put({ type: HUE_ACTIONS.REQUEST_START });
-    const token = yield getToken(action.payload.bridgeIP, action.payload.userName);
+    const token = yield getToken(action.bridgeIP, action.userName);
     yield put({
       type: USER_ACTIONS.SET_USER,
       user: {
@@ -38,6 +53,7 @@ function* fetchToken(action) {
 
 function* hueSaga() {
   yield takeLatest(HUE_ACTIONS.FETCH_TOKEN, fetchToken);
+  yield takeLatest(HUE_ACTIONS.FETCH_STATES, fetchStates);
   yield takeLatest(HUE_ACTIONS.GET_LIGHTS, fetchLights);
 }
 

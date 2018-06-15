@@ -137,7 +137,7 @@ router.get('/groups', (req, res) => {
     let queryText = `SELECT "lights"."id", "lights"."name", "lights"."type", "lights"."room_id", "rooms"."name" AS "room_name"
                      FROM "lights"
                      INNER JOIN "rooms" ON "lights"."room_id" = "rooms"."id"
-                     ORDER BY "rooms"."name"`;
+                     ORDER BY "rooms"."id"`;
     pool.query(queryText)
       .then(response => {
         res.send(response.rows);

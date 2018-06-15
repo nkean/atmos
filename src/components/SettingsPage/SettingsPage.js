@@ -93,8 +93,8 @@ class SettingsPage extends Component {
   }
 
   roomModalSave = () => {
-    this.props.dispatch(updateRoom(this.state.selectedRoom));
     this.props.dispatch(updateLights(this.state.assignedLights));
+    this.props.dispatch(updateRoom(this.state.selectedRoom));
     this.setState({
       showRoomModal: false,
       selectedRoom: {},
@@ -109,9 +109,9 @@ class SettingsPage extends Component {
     });
   }
 
-  handleModalLightName = index => {
+  handleModalLightName = (index) => {
     let assignedLightsNew = this.state.assignedLights;
-    let inputValue = this.refs.modalLightName.input.value;
+    let inputValue = this.refs[index].input.value;
     assignedLightsNew[index] = {
       ...this.state.assignedLights[index],
       name: inputValue,
@@ -196,7 +196,7 @@ class SettingsPage extends Component {
           </Button>
           <div>
             {this.props.config.rooms.map(room => <Button type="primary" onClick={() => this.showRoomModal(room)} key={room.id}>{room.name}</Button>)}
-            <Button type="primary" onClick={() => this.addRoom()}>Add Room</Button>
+            <Button type="primary" onClick={() => this.addRoom()}><Icon type="plus"/>Add Room</Button>
           </div>
           <Modal
             title="Configure Room Settings"
@@ -220,7 +220,7 @@ class SettingsPage extends Component {
                 onClick={() => this.handleLightChangeRoom(index)}
                 ref="modalRoomId"
               >
-              {light.room_id === this.state.selectedRoom.id ? <Input placeholder="Light Name" onChange={() => this.handleModalLightName(index)} value={light.name} ref="modalLightName" style={{width: 175}}/> : <div>{light.name}</div>}
+              {light.room_id === this.state.selectedRoom.id ? <Input placeholder="Light Name" onChange={() => this.handleModalLightName(index)} value={light.name} ref={index} style={{width: 175}}/> : <div>{light.name}</div>}
               </Radio>)
             }
           </Modal>

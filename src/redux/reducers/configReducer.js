@@ -19,7 +19,7 @@ const rooms = (state = [], action) => {
   }
 };
 
-const groups = (state = {}, action) => {
+const groups = (state = {names: [], lights: []}, action) => {
   switch (action.type) {
     case CONFIG_ACTIONS.SET_GROUPS:
       return action.groups || state;

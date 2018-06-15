@@ -14,6 +14,7 @@ import RoomsPage from './components/RoomsPage/RoomsPage';
 import SettingsPage from './components/SettingsPage/SettingsPage';
 
 import './styles/main.css';
+import 'antd/dist/antd.css';
 
 const App = () => (
   <div>

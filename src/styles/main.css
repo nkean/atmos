@@ -1,14 +1,15 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+/* body {
+    background-color: rgb(202, 202, 202) !important;
 }
 
 .instructions h1 {
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 600;
+    color: #ece7e7;
 }
 
 .instructions {
-    background-color: #00acb0;
+    background-color: #faad14;
     padding: 5px;
     color: #ece7e7;
 }
@@ -48,9 +49,11 @@ input[type="submit"] {
 }
 
 .navbar {
-  background-color: #00acb0;
+  background-color: #faad14;
   width: 100%;
   border-radius: 0px;
+  color: #ece7e7;
+  font-size: 16px;
 }
 
 ul {
@@ -73,8 +76,11 @@ li a {
 
 }
 
-/* Change the link color to #111 (black) on hover */
 li a:hover {
     text-decoration: underline;
     color: #eee;
 }
+
+.ant-card-head {
+    background: #1890ff !important;
+} */

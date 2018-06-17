@@ -54,6 +54,7 @@ router.post('/token', (req, res) => {
   }
 });
 
+// ONLY USE THIS TO POST LIGHTS FROM HUE BRIDGE  ->> MAKE A NEW PUT ROUTE FOR LIGHT UPDATES!!!
 router.post('/lights', (req, res) => {
   if (req.isAuthenticated()) {
     const lights = req.body.lights;

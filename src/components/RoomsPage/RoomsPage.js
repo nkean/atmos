@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Nav from '../Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
 import { CONFIG_ACTIONS } from '../../redux/actions/configActions';
-import { fetchStates } from '../../redux/actions/hueActions';
 import { Col, Row } from 'antd';
 
 import RoomCard from '../RoomCard/RoomCard';
@@ -25,10 +24,6 @@ class RoomsPage extends Component {
   componentDidUpdate() {
     if (!this.props.user.isLoading && this.props.user.userName === null) {
       this.props.history.push('home');
-    } else if (this.props.config.bridgeIP !== null && this.props.user.userToken !== null) {
-      if(this.props.hue.states === null && !this.props.hue.isLoading) {
-        this.props.dispatch(fetchStates(this.props.config.bridgeIP, this.props.user.userToken));
-      }
     }
   }
 
@@ -38,7 +33,7 @@ class RoomsPage extends Component {
     if (this.props.user.userName) {
       content = (
         <div>
-          <Row gutter={24} type="flex" justify="start" style={{ margin: 5, maxWidth: 1100 }}>
+          <Row gutter={24} type="flex" justify="start" style={{ margin: 5, maxWidth: 1200 }}>
             {this.props.config.groups.lights.map((group, index) => (
               <Col span={6} key={index}>
                 <RoomCard

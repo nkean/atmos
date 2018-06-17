@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Icon, Input, Modal, Radio } from 'antd';
+import { Button, Col, Icon, Input, Modal, Radio, Row } from 'antd';
 
 import Nav from '../../components/Nav/Nav';
 import { USER_ACTIONS } from '../../redux/actions/userActions';
@@ -25,6 +25,7 @@ class SettingsPage extends Component {
       showRoomModal: false,
       selectedRoom: {},
       assignedLights: [],
+      modifiedLights: [],
     };
   }
 
@@ -42,8 +43,8 @@ class SettingsPage extends Component {
 
   componentDidMount() {
     this.props.dispatch({ type: USER_ACTIONS.FETCH_USER });
-    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_CONFIG });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_LIGHTS });
+    this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_CONFIG });
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_ROOMS });
   }
 
@@ -93,7 +94,8 @@ class SettingsPage extends Component {
   }
 
   roomModalSave = () => {
-    this.props.dispatch(updateLights(this.state.assignedLights));
+    console.log(this.state.modifiedLights);
+    this.props.dispatch(updateLights(this.state.modifiedLights));
     this.props.dispatch(updateRoom(this.state.selectedRoom));
     this.setState({
       showRoomModal: false,
@@ -112,12 +114,14 @@ class SettingsPage extends Component {
   handleModalLightName = (index) => {
     let assignedLightsNew = this.state.assignedLights;
     let inputValue = this.refs[index].input.value;
+    
     assignedLightsNew[index] = {
       ...this.state.assignedLights[index],
       name: inputValue,
     };
     this.setState({
       assignedLights: assignedLightsNew,
+      modifiedLights: [...this.state.modifiedLights, assignedLightsNew[index]],
     });
   }
 
@@ -125,28 +129,31 @@ class SettingsPage extends Component {
   handleLightChangeRoom = index => {
     let currentRoomId = this.state.assignedLights[index].room_id;
     let prevRoomId = this.props.hue.lights[index].room_id;
-    let assignedLights = this.state.assignedLights;
+    let assignedLightsNew = this.state.assignedLights;
     let radioValue = this.refs.modalRoomId.props.value;
 
     if (currentRoomId !== radioValue) {
-      assignedLights[index] = {
-        ...this.state.assignedLights[index],
+      console.log('SET TO NEW');
+      assignedLightsNew[index] = {
+        ...assignedLightsNew[index],
         room_id: radioValue,
       };
     } else if (currentRoomId === radioValue && prevRoomId === radioValue) {
-      assignedLights[index] = {
-        ...this.state.assignedLights[index],
+      console.log('SET TO NULL');
+      assignedLightsNew[index] = {
+        ...assignedLightsNew[index],
         room_id: null,
       };
     } else {
-      assignedLights[index] = {
-        ...this.state.assignedLights[index],
+      console.log('SET TO PREV');
+      assignedLightsNew[index] = {
+        ...assignedLightsNew[index],
         room_id: prevRoomId,
       };
     }
-
     this.setState({
-      assignedLights: assignedLights,
+      assignedLights: assignedLightsNew,
+      modifiedLights:[...this.state.modifiedLights, assignedLightsNew[index]],
     });
   }
 
@@ -166,12 +173,31 @@ class SettingsPage extends Component {
     if (this.props.user.userName) {
       content = (
         <div>
+          <Row gutter={48} type="flex" justify="end">
+            <Col span={4} justify="end">
+              <Button
+                type="primary"
+                onClick={() => this.saveSettings()}
+                size="large"
+                style={{paddingLeft: 5}}
+              >
+                <Icon type="save" />
+                Save
+              </Button>
+            </Col>
+          </Row>
+          <h3>Bridge:</h3>
+          <Row gutter={24} type="flex" justify="start" style={{padding: 5}}>
+          <Col span={5}>
           <Input
             placeholder="Bridge IP (ex: 192.168.1.100)"
             onChange={this.handleInputChangeFor('bridgeIP')}
             value={this.state.bridgeIP}
             style={{ width: 250 }}
+            size="large"
           />
+          </Col>
+          <Col span={10}>
           <Search
             placeholder="Hue API Token"
             enterButton="Fetch New"
@@ -179,25 +205,37 @@ class SettingsPage extends Component {
             value={this.state.userToken}
             onSearch={() => this.getToken()}
             style={{ width: 500 }}
+            size="large"
           />
-          <Button
-            type="primary"
-            onClick={() => this.saveSettings()}
-          >
-            <Icon type="save" />
-            Save
-          </Button>
+          </Col>
+          <Col span={4}>
           <Button
             type="primary"
             onClick={() => this.getLights()}
+            size="large"
           >
             <Icon type="bulb" />
             Get Lights
           </Button>
-          <div>
-            {this.props.config.rooms.map(room => <Button type="primary" onClick={() => this.showRoomModal(room)} key={room.id}>{room.name}</Button>)}
-            <Button type="primary" onClick={() => this.addRoom()}><Icon type="plus"/>Add Room</Button>
-          </div>
+          </Col>
+          </Row>
+          <h3>Manage Rooms:</h3>
+          <Row gutter={24} type="flex" justify="start" style={{padding: 5}}>
+            {this.props.config.rooms.map(room => 
+            <Col span={3} key={room.id}>
+              <Button 
+                type="primary" 
+                size="large" 
+                onClick={() => this.showRoomModal(room)}
+                style={{width: 140}}
+              >
+                {room.name}
+              </Button>
+            </Col>)}
+            <Col span={3}>
+              <Button type="primary" size="large" onClick={() => this.addRoom()}><Icon type="plus"/>Add Room</Button>
+            </Col>
+          </Row>
           <Modal
             title="Configure Room Settings"
             okText="Save"

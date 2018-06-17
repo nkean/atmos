@@ -44,7 +44,7 @@ export function getGroups() {
           groupObject.lights[roomId] = [...groupObject.lights[roomId], newLight];
         } else {
           if(groupObject.names.indexOf(roomName) === -1) {
-            groupObject.names.push(roomName);
+            groupObject.names[roomId] = roomName;
           }
           groupObject.lights[roomId] = [newLight];
         };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon, List, Switch } from 'antd';
 import { setLight } from '../../redux/requests/hueRequests';
+import { fetchLightState } from '../../redux/actions/hueActions';
 
 const mapStateToProps = state => ({
   user: state.user,
@@ -18,17 +19,17 @@ class LightListItem extends Component {
     };
   }
 
-  componentWillMount() {
-    if(this.props.hue.states){
+  componentDidUpdate(prevProps) {
+    if(this.props.hue.states !== prevProps.hue.states) {
       this.setState({ ...this.props.hue.states[this.props.light.id] });
     }
   }
 
   onSwitchChange = () => {
-    let state = {...this.state};
-    state.on = !state.on;
-    setLight(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id, state);
-    this.setState({ on: !this.state.on });
+    let newState = this.state;
+    newState.on = !newState.on;
+    setLight(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id, newState);
+    this.props.dispatch(fetchLightState(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id));
   }
 
   render() {

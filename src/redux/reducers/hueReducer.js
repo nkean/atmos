@@ -23,8 +23,10 @@ const isLoading = (state = false, action) => {
 
 const states = (state = null, action) => {
   switch (action.type) {
-    case HUE_ACTIONS.SET_STATES:
+    case HUE_ACTIONS.SET_ALL_STATES:
       return action.states || state;
+    case HUE_ACTIONS.SET_LIGHT_STATE:
+      return {...state, [action.lightID]: action.state} || state;
     default:
       return state;
   }

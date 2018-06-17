@@ -28,7 +28,7 @@ export function getLights(bridgeIP, userToken) {
     })
 }
 
-export function getStates(bridgeIP, userToken) {
+export function getAllStates(bridgeIP, userToken) {
   const url = `http://${bridgeIP}/api/${userToken}/lights`;
   return axios.get(url)
     .then(response => {
@@ -58,6 +58,32 @@ export function getStates(bridgeIP, userToken) {
     })
     .catch(error => {
       console.log('Error getting state of lights: ',  error);
+    })
+}
+
+export function getLightState(bridgeIP, userToken, lightID) {
+  const url = `http://${bridgeIP}/api/${userToken}/lights/${lightID}`;
+  return axios.get(url)
+    .then(response => {
+      let state = response.data.state;
+      let newState = {};
+      if (state.xy) {
+        newState = {
+          on: state.on,
+          bri: state.bri,
+          xy: state.xy,
+        };
+      } else {
+        newState = {
+          on: state.on,
+          bri: state.bri,
+        };
+      }
+      console.log(newState);
+      return newState;
+    })
+    .catch(error => {
+      console.log('Error getting state of light: ', error);
     })
 }
 

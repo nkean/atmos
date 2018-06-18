@@ -35,6 +35,7 @@ export function getGroups() {
       lightArray.forEach(light => {
         let roomId = light.room_id - 1;
         let roomName = light.room_name;
+        let roomImage = light.room_image;
         let newLight = {
           id: light.id,
           name: light.name,
@@ -44,7 +45,10 @@ export function getGroups() {
           groupObject.lights[roomId] = [...groupObject.lights[roomId], newLight];
         } else {
           if(groupObject.names.indexOf(roomName) === -1) {
-            groupObject.names[roomId] = roomName;
+            groupObject.names[roomId] = {
+              room: roomName,
+              image: roomImage,
+            };
           }
           groupObject.lights[roomId] = [newLight];
         };

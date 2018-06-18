@@ -29,6 +29,7 @@ class LightListItem extends Component {
     let newState = this.state;
     newState.on = !newState.on;
     setLight(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id, newState);
+    this.setState({...newState});
     this.props.dispatch(fetchLightState(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id));
   }
 

@@ -38,7 +38,8 @@ class RoomsPage extends Component {
               <Col span={6} key={index}>
                 <RoomCard
                   group={group}
-                  roomName={this.props.config.groups.names[index]}
+                  roomName={this.props.config.groups.names[index].room}
+                  roomImage={this.props.config.groups.names[index].image}
                 />
               </Col>
             ))}

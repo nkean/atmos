@@ -135,7 +135,7 @@ router.post('/room', (req, res) => {
 
 router.get('/groups', (req, res) => {
   if(req.isAuthenticated()) {
-    let queryText = `SELECT "lights"."id", "lights"."name", "lights"."type", "lights"."room_id", "rooms"."name" AS "room_name"
+    let queryText = `SELECT "lights"."id", "lights"."name", "lights"."type", "lights"."room_id", "rooms"."name" AS "room_name", "rooms"."image" AS "room_image"
                      FROM "lights"
                      INNER JOIN "rooms" ON "lights"."room_id" = "rooms"."id"
                      ORDER BY "rooms"."id"`;

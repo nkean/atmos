@@ -6,11 +6,6 @@ const Nav = () => (
     <div>
       <ul>
         <li>
-          <Link to="/user">
-            User Home
-          </Link>
-        </li>
-        <li>
           <Link to="/rooms">
             Rooms
           </Link>

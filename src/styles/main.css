@@ -1,35 +1,23 @@
-/* body {
-    background-color: rgb(202, 202, 202) !important;
-}
-
 .instructions h1 {
     font-size: 24px;
     font-weight: 600;
-    color: #ece7e7;
+    color: #ffffff;
 }
 
 .instructions {
     background-color: #faad14;
     padding: 5px;
-    color: #ece7e7;
+    color: #ffffff;
 }
 
-form {
-    background-color: #dbd5d5;
-    width: 30%;
-    height: 250px;
-    margin: 20px auto;
-    padding: 25px;
-    border-radius: 2px;
+.header-title {
+    font-size: 24px;
+    font-weight: 700;
 }
 
-input {
-    margin: 5px;
-    margin-bottom: 10px;
-}
-
-input[type="submit"] {
-    margin: 10px;
+.header-tagline {
+    font-size: 18px;
+    font-weight: 700;
 }
 
 .message {
@@ -52,38 +40,34 @@ input[type="submit"] {
   background-color: #faad14;
   width: 100%;
   border-radius: 0px;
-  color: #ece7e7;
+  color: #ffffff;
   font-size: 16px;
 }
 
-ul {
+.navbar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
 }
 
-li {
+.navbar li {
     float: left;
 }
 
-li a {
+.navbar li a {
     display: block;
-    color: white;
+    color: #ffffff;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 
 }
 
-li a:hover {
+.navbar li a:hover {
     text-decoration: underline;
-    color: #eee;
+    color: #e6e4e4;
 }
-
-.ant-card-head {
-    background: #1890ff !important;
-} */
 
 .room-card {
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -93,3 +77,16 @@ li a:hover {
 .room-card:hover {
     box-shadow: 0 5px 12px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
+
+.sign-form {
+    background-color: #e6f7ff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -160px 0 0 -160px;
+    width: 320px;
+    height: 280px;
+    box-shadow: 0 0 100px rgba(0,0,0,.08);
+    border: 1px #bfbfbf solid;
+    border-radius: 5px; 
+}

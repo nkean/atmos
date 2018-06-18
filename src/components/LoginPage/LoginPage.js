@@ -29,7 +29,7 @@ class LoginPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.userName) {
-      this.props.history.push('/user');
+      this.props.history.push('/rooms');
     }
   }
 
@@ -69,31 +69,42 @@ class LoginPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="sign-form">
         {this.renderAlert()}
         <Form onSubmit={this.login}>
+          <h2 style={{ textAlign: 'center', paddingTop: '20px' }}>Please Login</h2>
           <FormItem>
-              <Input
-                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Username"
-                onChange={this.handleInputChangeFor('username')}
-              />
+            <Input
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)', paddingLeft: '40px' }} />}
+              placeholder="Username"
+              value={this.state.username}
+              onChange={this.handleInputChangeFor('username')}
+              style={{ width: '280px', paddingLeft: '40px' }}
+            />
           </FormItem>
           <FormItem>
-              <Input
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type="password"
-                placeholder="Password"
-                onChange={this.handleInputChangeFor('password')}
-              />
+            <Input
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)', paddingLeft: '40px' }} />}
+              type="password"
+              placeholder="Password"
+              value={this.state.password}
+              onChange={this.handleInputChangeFor('password')}
+              style={{ width: '280px', paddingLeft: '40px' }}
+            />
           </FormItem>
-          <Button
-            type="primary"
-            htmlType="submit"
-          >
-            Log In
-          </Button>
-          Or <Link to="/register">Register</Link>
+          <div style={{ paddingLeft: '40px' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: '240px' }}
+            >
+              <Icon type="login"/>
+              Log In
+            </Button>
+          </div>
+          <div style={{ paddingLeft: '122px' }}>
+            Or <Link to="/register">Register</Link>
+          </div>
         </Form>
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Icon, List, Switch } from 'antd';
+import { List, Switch } from 'antd';
 import { setLight } from '../../redux/requests/hueRequests';
 import { fetchLightState } from '../../redux/actions/hueActions';
 
@@ -34,12 +34,19 @@ class LightListItem extends Component {
   }
 
   render() {
+    let lightImage = null;
+    if(this.props.light.type === 'color') {
+      lightImage = './images/lights/e27_waca.svg';
+    } else {
+      lightImage = './images/lights/e27_white.svg';
+    }
+
     return (
                 <List.Item
                   actions={[<Switch checkedChildren="ON" unCheckedChildren="OFF" checked={this.state.on} onChange={() => this.onSwitchChange()}/>]}
                 >
                   <List.Item.Meta
-                    title={<Icon type="bulb" />}
+                    title={<img alt="light" src={lightImage} style={{ height: '30px' }} />}
                     description={this.props.light.name}
                   />
                 </List.Item>

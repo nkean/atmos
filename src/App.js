@@ -9,7 +9,6 @@ import {
 import Header from './components/Header/Header';
 import LoginPage from './components/LoginPage/LoginPage';
 import RegisterPage from './components/RegisterPage/RegisterPage';
-import UserPage from './components/UserPage/UserPage';
 import RoomsPage from './components/RoomsPage/RoomsPage';
 import SettingsPage from './components/SettingsPage/SettingsPage';
 
@@ -18,7 +17,7 @@ import 'antd/dist/antd.css';
 
 const App = () => (
   <div>
-    <Header title="Atmos: Home Lighting Recipes" />
+    <Header title="Atmos: " tagline="Home Lighting Control" />
     <Router>
       <Switch>
         <Redirect exact from="/" to="/home" />
@@ -29,10 +28,6 @@ const App = () => (
         <Route
           path="/register"
           component={RegisterPage}
-        />
-        <Route
-          path="/user"
-          component={UserPage}
         />
         <Route
           path="/rooms"

@@ -32,7 +32,7 @@ class RoomsPage extends Component {
 
     if (this.props.user.userName) {
       content = (
-        <div>
+        <div style={{ paddingTop: '20px' }}>
           <Row gutter={24} type="flex" justify="start" style={{ margin: 5, maxWidth: 1200 }}>
             {this.props.config.groups.lights.map((group, index) => (
               <Col span={6} key={index}>

@@ -54,14 +54,13 @@ router.post('/token', (req, res) => {
   }
 });
 
-// ONLY USE THIS TO POST LIGHTS FROM HUE BRIDGE  ->> MAKE A NEW PUT ROUTE FOR LIGHT UPDATES!!!
 router.post('/lights', (req, res) => {
   if (req.isAuthenticated()) {
     const lights = req.body.lights;
     let queryText = `INSERT INTO "lights" ("id", "type", "name", "room_id")
                      VALUES ($1, $2, $3, $4)
                      ON CONFLICT ("id")
-                     DO UPDATE SET "type" = $2, "name" = $3, "room_id" = COALESCE($4, "lights"."room_id")`;
+                     DO UPDATE SET "type" = $2, "name" = $3, "room_id" = $4`;
     lights.forEach(light => {
       pool.query(queryText, [light.id, light.type, light.name, light.room_id])
         .then(response => {
@@ -97,8 +96,11 @@ router.get('/lights', (req, res) => {
 
 router.get('/rooms', (req, res) => {
   if(req.isAuthenticated()) {
-    let queryText = `SELECT * FROM "rooms"
-                     ORDER BY "name"`;
+    let queryText = `SELECT "rooms"."id", "rooms"."name", "rooms"."image", COUNT("lights"."room_id")
+                     FROM "rooms"
+                     LEFT JOIN "lights" ON "rooms"."id" = "lights"."room_id"
+                     GROUP BY "rooms"."id"
+                     ORDER BY "rooms"."name"`;
     pool.query(queryText)
       .then(response => {
         res.send(response.rows);

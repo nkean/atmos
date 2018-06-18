@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Button, Form, Icon, Input } from 'antd';
+
+const FormItem = Form.Item;
 
 class RegisterPage extends Component {
   constructor(props) {
@@ -67,41 +70,42 @@ class RegisterPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className="sign-form">
         {this.renderAlert()}
-        <form onSubmit={this.registerUser}>
-          <h1>Register User</h1>
-          <div>
-            <label htmlFor="username">
-              Username:
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleInputChangeFor('username')}
-              />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="password">
-              Password:
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleInputChangeFor('password')}
-              />
-            </label>
-          </div>
-          <div>
-            <input
-              type="submit"
-              name="submit"
-              value="Register"
+        <Form onSubmit={this.registerUser}>
+          <h2 style={{ textAlign: 'center', paddingTop: '20px' }}>Register User</h2>
+          <FormItem>
+            <Input
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)', paddingLeft: '40px' }} />}
+              placeholder="Username"
+              value={this.state.username}
+              onChange={this.handleInputChangeFor('username')}
+              style={{ width: '280px', paddingLeft: '40px' }}
             />
-            <Link to="/home">Cancel</Link>
+          </FormItem>
+          <FormItem>
+            <Input
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)', paddingLeft: '40px' }} />}
+              type="password"
+              placeholder="Password"
+              value={this.state.password}
+              onChange={this.handleInputChangeFor('password')}
+              style={{ width: '280px', paddingLeft: '40px' }}
+            />
+          </FormItem>
+          <div style={{ paddingLeft: '40px' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: '240px' }}
+            >
+              Register
+            </Button>
           </div>
-        </form>
+          <div style={{ paddingLeft: '126px' }}>
+            Or <Link to="/home">Cancel</Link>
+          </div>
+        </Form>
       </div>
     );
   }

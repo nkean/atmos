@@ -117,11 +117,11 @@ router.get('/rooms', (req, res) => {
 router.post('/room', (req, res) => {
   if(req.isAuthenticated()) {
     const room = req.body.room;
-    let queryText = `INSERT INTO "rooms" ("id", "name")
-                     VALUES ($1, $2)
+    let queryText = `INSERT INTO "rooms" ("id", "name", "image")
+                     VALUES ($1, $2, $3)
                      ON CONFLICT ("id")
-                     DO UPDATE SET "name" = $2`;
-    pool.query(queryText, [room.id, room.name])
+                     DO UPDATE SET "name" = $2, "image" = $3`;
+    pool.query(queryText, [room.id, room.name, room.image])
       .then(response => {
         console.log('Updated room in database: ', room.name);
         res.sendStatus(201);

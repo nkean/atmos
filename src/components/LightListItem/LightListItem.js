@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { List, Switch } from 'antd';
 
 import { setLight } from '../../redux/requests/hueRequests';
-import { fetchLightState } from '../../redux/actions/hueActions';
-
+// import { fetchLightState } from '../../redux/actions/hueActions';
 
 const mapStateToProps = state => ({
   user: state.user,
@@ -32,7 +31,7 @@ class LightListItem extends Component {
     newState.on = !newState.on;
     setLight(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id, newState);
     this.setState({...newState});
-    this.props.dispatch(fetchLightState(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id));
+  //   this.props.dispatch(fetchLightState(this.props.config.bridgeIP, this.props.user.userToken, this.props.light.id));
   }
 
   render() {

@@ -72,7 +72,10 @@ class SettingsPage extends Component {
 
   getToken = () => {
     if (this.state.userToken === null) {
-      this.props.dispatch(fetchToken(this.state.bridgeIP, this.props.user.userName));
+      if(window.confirm('Please press the link button on your bridge, then press OK to get new API token.')) {
+        console.log('Pressed OK')
+        this.props.dispatch(fetchToken(this.state.bridgeIP, this.props.user.userName));
+      }
     } else {
       alert('A token already exists for this username');
     }
@@ -180,7 +183,7 @@ class SettingsPage extends Component {
       content = (
         <div style={{ paddingTop: '20px' }}>
           <Row gutter={48} style={{ paddingLeft: 40, paddingRight: 40 }}>
-            <Col span={13} style={{ backgroundColor: '#fafafa', border: '1.5px #bfbfbf solid', borderRadius: '15px', margin: 5 }}>
+            <Col span={14} style={{ backgroundColor: '#fafafa', border: '1.5px #bfbfbf solid', borderRadius: '15px', margin: 5 }}>
               <Row style={{ paddingBottom: 20 }}>
               <h3>Bridge IP:</h3>
                 <Input
@@ -217,7 +220,7 @@ class SettingsPage extends Component {
               </Row>
             </Col>
 
-            <Col span={10} style={{ backgroundColor: '#fafafa', border: '1.5px #bfbfbf solid', borderRadius: '15px', margin: 5 }}>
+            <Col span={8} style={{ backgroundColor: '#fafafa', border: '1.5px #bfbfbf solid', borderRadius: '15px', margin: 5 }}>
               <h3>Manage Rooms:</h3>
               <Row gutter={32} type="flex">
                 {this.props.config.rooms.map(room =>

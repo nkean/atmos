@@ -56,12 +56,12 @@ class LoginPage extends Component {
   renderAlert() {
     if (this.props.login.message !== '') {
       return (
-        <h2
+        <h5
           className="alert"
           role="alert"
         >
           {this.props.login.message}
-        </h2>
+        </h5>
       );
     }
     return (<span />);

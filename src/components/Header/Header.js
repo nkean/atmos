@@ -15,7 +15,7 @@ class Header extends Component {
         <div className="header-title">
           {this.props.title}<span className="header-tagline">{this.props.tagline}</span>
           <span style={{ float: 'right', paddingRight: '15px' }}>
-            <Button size="small" onClick={this.logout} ghost>
+            <Button onClick={this.logout} ghost>
               <Icon type="logout" />
               Logout
             </Button>

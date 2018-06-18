@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { List, Switch } from 'antd';
+
 import { setLight } from '../../redux/requests/hueRequests';
 import { fetchLightState } from '../../redux/actions/hueActions';
+
 
 const mapStateToProps = state => ({
   user: state.user,
@@ -34,11 +36,11 @@ class LightListItem extends Component {
   }
 
   render() {
-    let lightImage = null;
+    let listTitle = null;
     if(this.props.light.type === 'color') {
-      lightImage = './images/lights/e27_waca.svg';
+      listTitle = <img alt="light" src='./images/lights/e27_waca.svg' style={{ height: '30px' }} />;
     } else {
-      lightImage = './images/lights/e27_white.svg';
+      listTitle = <img alt="light" src='./images/lights/e27_white.svg' style={{ height: '30px' }} />;
     }
 
     return (
@@ -46,7 +48,7 @@ class LightListItem extends Component {
                   actions={[<Switch checkedChildren="ON" unCheckedChildren="OFF" checked={this.state.on} onChange={() => this.onSwitchChange()}/>]}
                 >
                   <List.Item.Meta
-                    title={<img alt="light" src={lightImage} style={{ height: '30px' }} />}
+                    title={listTitle}
                     description={this.props.light.name}
                   />
                 </List.Item>

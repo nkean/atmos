@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { triggerLogout } from '../../redux/actions/loginActions';
 import { Button, Icon } from 'antd';
 
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
 class Header extends Component {
 
   logout = () => {
@@ -15,10 +19,10 @@ class Header extends Component {
         <div className="header-title">
           {this.props.title}<span className="header-tagline">{this.props.tagline}</span>
           <span style={{ float: 'right', paddingRight: '15px' }}>
-            <Button onClick={this.logout} ghost>
+            {this.props.user.userName ? <Button onClick={this.logout} ghost>
               <Icon type="logout" />
               Logout
-            </Button>
+            </Button> : null}
           </span>
         </div>
       </div>
@@ -26,4 +30,4 @@ class Header extends Component {
   }
 }
 
-export default connect()(Header);
+export default connect(mapStateToProps)(Header);

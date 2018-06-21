@@ -26,7 +26,6 @@ class SettingsPage extends Component {
       showRoomModal: false,
       selectedRoom: {},
       assignedLights: [],
-      modifiedLights: [],
     };
   }
 
@@ -49,9 +48,17 @@ class SettingsPage extends Component {
     this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_ROOMS });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (!this.props.user.isLoading && this.props.user.userName === null) {
       this.props.history.push('home');
+    } else if (prevProps.user.userToken !== this.props.user.userToken) {
+      this.setState({
+        userToken: this.props.user.userToken,
+      });
+    } else if (prevProps.config.bridgeIP !== this.props.config.bridgeIP) {
+      this.setState({
+        bridgeIP: this.props.config.bridgeIP,
+      });
     }
   }
 
@@ -71,13 +78,9 @@ class SettingsPage extends Component {
   }
 
   getToken = () => {
-    if (this.state.userToken === null) {
-      if(window.confirm('Please press the link button on your bridge, then press OK to get new API token.')) {
-        console.log('Pressed OK')
-        this.props.dispatch(fetchToken(this.state.bridgeIP, this.props.user.userName));
-      }
-    } else {
-      alert('A token already exists for this username');
+    if (window.confirm('Please press the link button on your bridge, then press OK to get new API token.')) {
+      console.log('Pressed OK')
+      this.props.dispatch(fetchToken(this.state.bridgeIP, this.props.user.userName));
     }
   }
 
@@ -86,7 +89,15 @@ class SettingsPage extends Component {
   }
 
   getLights = () => {
-    this.props.dispatch(fetchLights(this.state.bridgeIP, this.state.userToken));
+    if (this.props.user.userToken) {
+      this.props.dispatch(fetchLights(this.state.bridgeIP, this.state.userToken));
+      if (window.confirm('Sucessfully updated available lights')) {
+        this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_ROOMS });
+        this.props.dispatch({ type: CONFIG_ACTIONS.FETCH_LIGHTS });
+      }
+    } else {
+      alert('You don\'t have an API token. Please use the "Fetch New" button to get one, then try again');
+    }
   }
 
   showRoomModal = room => {
@@ -99,7 +110,13 @@ class SettingsPage extends Component {
 
   roomModalSave = () => {
     console.log(this.state.modifiedLights);
-    this.props.dispatch(updateLights(this.state.modifiedLights));
+    let modifiedLights = [];
+    this.state.assignedLights.forEach(light => {
+      if (light.room_id === this.state.selectedRoom.id) {
+        modifiedLights.push(light);
+      }
+    });
+    this.props.dispatch(updateLights(modifiedLights));
     this.props.dispatch(updateRoom(this.state.selectedRoom));
     this.setState({
       showRoomModal: false,
@@ -125,7 +142,6 @@ class SettingsPage extends Component {
     };
     this.setState({
       assignedLights: assignedLightsNew,
-      modifiedLights: [...this.state.modifiedLights, assignedLightsNew[index]],
     });
   }
 
@@ -162,7 +178,6 @@ class SettingsPage extends Component {
     }
     this.setState({
       assignedLights: assignedLightsNew,
-      modifiedLights: [...this.state.modifiedLights, assignedLightsNew[index]],
     });
   }
 
@@ -185,7 +200,7 @@ class SettingsPage extends Component {
           <Row gutter={48} style={{ paddingLeft: 40, paddingRight: 40 }}>
             <Col span={14} style={{ backgroundColor: '#fafafa', border: '1.5px #bfbfbf solid', borderRadius: '15px', margin: 5 }}>
               <Row style={{ paddingBottom: 20 }}>
-              <h3>Bridge IP:</h3>
+                <h3>Bridge IP:</h3>
                 <Input
                   placeholder="Bridge IP (ex: 192.168.1.100)"
                   onChange={this.handleInputChangeFor('bridgeIP')}
@@ -196,7 +211,7 @@ class SettingsPage extends Component {
               </Row>
 
               <Row style={{ paddingBottom: 20 }}>
-              <h3>API Token:</h3>
+                <h3>API Token:</h3>
                 <Search
                   placeholder="Hue API Token"
                   enterButton="Fetch New"
@@ -208,13 +223,13 @@ class SettingsPage extends Component {
               </Row>
 
               <Row style={{ paddingBottom: 20 }}>
-              <h3>Update Light List:</h3>
+                <h3>Update Light List:</h3>
                 <Button
                   type="primary"
                   onClick={() => this.getLights()}
                   size="large"
                 >
-                  <Icon type="bulb"/>
+                  <Icon type="bulb" />
                   Get Lights
                 </Button>
               </Row>
@@ -243,7 +258,7 @@ class SettingsPage extends Component {
               </Row>
             </Col>
           </Row>
-          
+
           <Modal
             title="Configure Room Settings"
             okText="Save"
